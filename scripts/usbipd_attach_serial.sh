@@ -107,7 +107,7 @@ if [[ $ATTACH_RC -ne 0 ]]; then
     echo "[info] device already attached, continue."
   else
     echo "[error] attach failed" >&2
-    exit $ATTACH_RC
+    exit "$ATTACH_RC"
   fi
 fi
 
