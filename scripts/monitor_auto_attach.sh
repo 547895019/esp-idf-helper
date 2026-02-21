@@ -79,4 +79,4 @@ if echo "$OUT" | grep -Eq "Could not open .*${PORT}|Could not exclusively lock p
 fi
 
 echo "$OUT"
-exit $RC
+exit "$RC"

@@ -96,5 +96,5 @@ while (( attempt < max_attempts )); do
 
   echo "[flash] 失败且不再重试（rc=$rc）"
   rm -f "$log_file"
-  exit $rc
+  exit "$rc"
 done
