@@ -6,6 +6,34 @@ set -euo pipefail
 
 OUT_REL="references/idf-py-help.txt"
 
+usage() {
+  cat <<'EOF'
+Usage:
+  capture_idf_help.sh [OPTIONS]
+
+Description:
+  Capture idf.py --help output to references/idf-py-help.txt for quick reference.
+  Uses ESPIDF_ROOT environment variable if set, otherwise uses idf.py from PATH.
+
+Options:
+  -h, --help         Show this help message
+
+Environment:
+  ESPIDF_ROOT        Path to ESP-IDF installation (optional)
+
+Example:
+  bash capture_idf_help.sh
+  ESPIDF_ROOT=/path/to/esp-idf bash capture_idf_help.sh
+EOF
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help) usage; exit 0;;
+    *) echo "Unknown arg: $1" >&2; usage; exit 2;;
+  esac
+done
+
 ESPIDF_ROOT="${ESPIDF_ROOT:-}"
 
 cd "$(dirname "$0")/.."  # skill root
