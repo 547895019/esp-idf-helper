@@ -68,7 +68,7 @@ get_serial_devices() {
 
   # Keep likely serial rows only
   local serial_rows
-  serial_rows=$(echo "$lines" | grep -E "USB 串行设备|USB JTAG/serial debug unit|USB-Enhanced-SERIAL|CP210|CH34|FTDI|Serial|UART|ESP32" || true)
+  serial_rows=$(echo "$lines" | grep -E "USB 串行设备|USB JTAG/serial debug unit|USB-Enhanced-SERIAL|CP210|CH34|FTDI|Serial|UART|ESP32|COM" || true)
 
   if [[ -n "$KEYWORD" ]]; then
     serial_rows=$(echo "$serial_rows" | grep -i -- "$KEYWORD" || true)
@@ -188,8 +188,8 @@ process_device() {
 
 # Process single device or all devices
 if [[ -n "$KEYWORD" && $(echo "$ALL_BUSIDS" | wc -l) -gt 1 ]]; then
-  # Multiple devices mode
-  echo "$ALL_BUSIDS" | while read -r busid; do
+  # Multiple devices mode - process each busid
+  for busid in $ALL_BUSIDS; do
     [[ -n "$busid" ]] && process_device "$busid"
   done
 else
