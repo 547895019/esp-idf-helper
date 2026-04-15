@@ -133,3 +133,19 @@ idf.py -p /dev/ttyACM0 flash monitor
 ```
 
 **Note:** This script runs in WSL2 and internally uses `powershell.exe` to communicate with Windows usbipd service.
+
+### Troubleshooting: powershell.exe not found
+
+If you encounter `powershell.exe: command not found`, the Windows paths are not in your PATH environment variable.
+
+**Quick Fix (current session only):**
+```bash
+export PATH="$PATH:/mnt/c/Windows/System32:/mnt/c/Windows/System32/WindowsPowerShell/v1.0"
+~/skills/esp-idf-helper/scripts/usbipd_attach_serial.sh --list
+```
+
+**Permanent Fix (add to ~/.bashrc):**
+```bash
+echo 'export PATH="$PATH:/mnt/c/Windows/System32:/mnt/c/Windows/System32/WindowsPowerShell/v1.0:/mnt/c/Windows/SysWOW64"' >> ~/.bashrc
+source ~/.bashrc
+```
