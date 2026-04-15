@@ -45,9 +45,9 @@ idf.py -p <PORT> -b <BAUD> flash  # Flash to device (optional)
 - `idf.py partition-table-flash` — Flash partition table to device
 - `idf.py storage-flash` — Flash storage filesystem partition
 - `idf.py size` — Show firmware size information
-- `idf.py -p <PORT> -b <BAUD> flash` — Flash firmware (default baud: 1152000)
+- `idf.py -p <PORT> -b <BAUD> flash` — Flash firmware (default baud: 460800)
 - `idf.py -p <PORT> monitor` — Open serial monitor
-- `idf.py -p <PORT> -b <BAUD> monitor` — Open serial monitor with specific baud (e.g. 1152000)
+- `idf.py -p <PORT> -b <BAUD> monitor` — Open serial monitor with specific baud (e.g. 460800)
 - `idf.py -p <PORT> -b <BAUD> flash monitor` — Flash then monitor
 
 ## Component Management
@@ -167,7 +167,7 @@ idf.py build
 # Create firmware package
 scripts/pack_firmware.sh ./build
 
-# Output: build/firmware_package/ and build/esp32s2_minibox_firmware_YYYYMMDD_HHMMSS.zip
+# Output: build/firmware_package/ and build/esp_firmware_YYYYMMDD_HHMMSS.zip
 ```
 
 ### Generated Package Contents

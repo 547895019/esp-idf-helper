@@ -16,7 +16,7 @@ fi
 
 FLASH_ARGS_FILE="${BUILD_DIR}/flash_args"
 OUTPUT_DIR="${BUILD_DIR}/firmware_package"
-ZIP_NAME="esp32s2_minibox_firmware_$(date +%Y%m%d_%H%M%S).zip"
+ZIP_NAME="esp_firmware_$(date +%Y%m%d_%H%M%S).zip"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ESPTOOL_WIN_DIR="tools/esptool"
 ESPTOOL_SOURCE="${SCRIPT_DIR}/esptool/esptool.exe"
