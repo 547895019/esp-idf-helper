@@ -62,7 +62,7 @@ auto_pick_busid() {
 
   # Keep likely serial rows only
   local serial_rows
-  serial_rows=$(echo "$lines" | grep -E "USB 串行设备|USB JTAG/serial debug unit|CP210|CH340|FTDI|Serial|UART|ESP32" || true)
+  serial_rows=$(echo "$lines" | grep -E "USB 串行设备|USB JTAG/serial debug unit|USB-Enhanced-SERIAL|CP210|CH34|FTDI|Serial|UART|ESP32" || true)
 
   if [[ -n "$KEYWORD" ]]; then
     serial_rows=$(echo "$serial_rows" | grep -i -- "$KEYWORD" || true)
