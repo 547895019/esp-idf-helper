@@ -75,7 +75,6 @@ idf.py update-dependencies
 
 ## Bundled resources
 ### references/
-- `references/esp-idf-cli.md` — concise command patterns + what to paste back when reporting errors.
 - `references/idf-py-help.txt` — captured `idf.py --help` output for quick lookup/search.
 
 To refresh the help text for your installed ESP-IDF version, run:
