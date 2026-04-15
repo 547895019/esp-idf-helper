@@ -73,7 +73,7 @@ idf.py update-dependencies
 idf.py build
 ```
 
-**Note:** Dependencies are recorded in `idf_component.yml` in your project root.
+**Note:** Dependencies are recorded in `idf_component.yml` in your project's main component directory (`main/`).
 
 ## Bundled resources
 ### references/
