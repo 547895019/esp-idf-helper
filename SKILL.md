@@ -149,3 +149,52 @@ export PATH="$PATH:/mnt/c/Windows/System32:/mnt/c/Windows/System32/WindowsPowerS
 echo 'export PATH="$PATH:/mnt/c/Windows/System32:/mnt/c/Windows/System32/WindowsPowerShell/v1.0:/mnt/c/Windows/SysWOW64"' >> ~/.bashrc
 source ~/.bashrc
 ```
+
+## Firmware Packaging
+
+Pack ESP-IDF build output into a distributable firmware package with cross-platform flash scripts.
+
+### Usage
+```bash
+scripts/pack_firmware.sh <build_directory>
+```
+
+### Example
+```bash
+# After building your project
+idf.py build
+
+# Create firmware package
+scripts/pack_firmware.sh ./build
+
+# Output: build/firmware_package/ and build/esp32s2_minibox_firmware_YYYYMMDD_HHMMSS.zip
+```
+
+### Generated Package Contents
+| File | Description |
+|------|-------------|
+| `flash.sh` | Linux/Mac flash script with retry and parallel support |
+| `flash.bat` | Windows multi-port flash launcher |
+| `flash_one.bat` | Windows single-port flash with retry |
+| `mac_addresses.txt` | Recorded MAC addresses (deduplicated) |
+| `*.bin` | Firmware binary files |
+| `tools/esptool/esptool.exe` | Windows esptool executable |
+| `README.txt` | Usage instructions |
+
+### Flash Script Features
+- **Auto-retry**: 3 attempts on failure
+- **Parallel flashing**: Multiple devices simultaneously
+- **MAC recording**: Automatic MAC address extraction and deduplication
+- **Cross-platform**: Linux/Mac/Windows support
+
+### Production Workflow
+```bash
+# 1. Build the project
+idf.py build
+
+# 2. Package firmware
+scripts/pack_firmware.sh ./build
+
+# 3. Distribute the ZIP to production line
+# Production team runs: flash.bat all  (Windows) or ./flash.sh /dev/ttyUSB*  (Linux)
+```
