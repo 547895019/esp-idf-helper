@@ -90,12 +90,17 @@ For WSL2 users, USB serial devices need to be attached via **usbipd** to be acce
 
 ### List Available Serial Devices
 ```bash
+# Run inside WSL2 (requires powershell.exe from Windows)
 scripts/usbipd_attach_serial.sh --list
 ```
 Shows all connected USB serial devices (CH340, CH343, CP210, FTDI, etc.).
 
+**Note:** This script must be run inside WSL2 where `powershell.exe` is available to communicate with Windows usbipd.
+
 ### Bind/Attach All Serial Devices
 ```bash
+# Run inside WSL2 (requires powershell.exe from Windows)
+
 # Bind and attach all COM port devices
 scripts/usbipd_attach_serial.sh --keyword "COM"
 
@@ -117,7 +122,7 @@ scripts/usbipd_attach_serial.sh --keyword "ESP32"
 
 ### Typical Workflow
 ```bash
-# 1. Check available devices
+# 1. Check available devices (inside WSL2)
 scripts/usbipd_attach_serial.sh --list
 
 # 2. Attach all serial devices
@@ -129,3 +134,5 @@ ls -la /dev/ttyACM* /dev/ttyUSB*
 # 4. Use with idf.py
 idf.py -p /dev/ttyACM0 flash monitor
 ```
+
+**Important:** The `usbipd_attach_serial.sh` script requires WSL2 with access to `powershell.exe` to communicate with the Windows usbipd service.
