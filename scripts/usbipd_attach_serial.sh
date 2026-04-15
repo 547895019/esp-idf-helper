@@ -197,9 +197,11 @@ else
   process_device "$BUSID"
 fi
 
-echo "\n=== WSL serial nodes ==="
+echo ""
+echo "=== WSL serial nodes ==="
 found=0
-for pat in /dev/ttyACM* /dev/ttyUSB*; do
+# Check various serial device patterns
+for pat in /dev/ttyACM* /dev/ttyUSB* /dev/ttyS*; do
   for dev in $pat; do
     if [[ -e "$dev" ]]; then
       echo "$dev"
@@ -211,4 +213,12 @@ if [[ "$found" -eq 0 ]]; then
   echo "No /dev/ttyACM* or /dev/ttyUSB* yet."
 fi
 
+# Also show USB device info if available
+if command -v lsusb >/dev/null 2>&1; then
+  echo ""
+  echo "=== USB devices (lsusb) ==="
+  lsusb | grep -i "serial\|uart\|ch34\|cp210\|ftdi" || echo "No matching USB serial devices found in lsusb"
+fi
+
+echo ""
 echo "Done."
