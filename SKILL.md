@@ -58,19 +58,17 @@ ESP-IDF projects can include external components from the **ESP Component Regist
 - **Search components:** Browse or search for components on the registry website
 
 ### Component Commands
-- `idf.py add-dependency "espressif/mdns^1.11.0"` — Add a component dependency to `idf_component.yml`
+- `idf.py add-dependency "<component>"` — Add a component dependency to `idf_component.yml`
 - `idf.py update-dependencies` — Download and update all project dependencies
 
 ### Component Management Workflow
 ```bash
 # 1) Add a dependency to your project
-idf.py add-dependency "espressif/mdns^1.11.0"
+idf.py add-dependency "<component>"
 
 # 2) Update dependencies (downloads components to managed_components/)
 idf.py update-dependencies
 
-# 3) Build as usual
-idf.py build
 ```
 
 **Note:** Dependencies are recorded in `idf_component.yml` in your project's main component directory (`main/`).
@@ -85,3 +83,49 @@ To refresh the help text for your installed ESP-IDF version, run:
 
 ### assets/
 Not used by default.
+
+## Serial Port Management (WSL2)
+
+For WSL2 users, USB serial devices need to be attached via **usbipd** to be accessible in WSL.
+
+### List Available Serial Devices
+```bash
+scripts/usbipd_attach_serial.sh --list
+```
+Shows all connected USB serial devices (CH340, CH343, CP210, FTDI, etc.).
+
+### Bind/Attach All Serial Devices
+```bash
+# Bind and attach all COM port devices
+scripts/usbipd_attach_serial.sh --keyword "COM"
+
+# Or attach specific device by busid
+scripts/usbipd_attach_serial.sh --busid 3-2
+
+# Or filter by device type
+scripts/usbipd_attach_serial.sh --keyword "CH343"
+scripts/usbipd_attach_serial.sh --keyword "ESP32"
+```
+
+### Serial Port Script Options
+- `--list` — List all matching serial devices and exit
+- `--busid <BUSID>` — Specify device bus ID (e.g., `3-2`)
+- `--keyword <TEXT>` — Filter devices by keyword (e.g., `COM`, `CH343`, `ESP32`)
+- `--bind` — Bind only (skip attach), useful for first-time setup with admin privileges
+- `--distro <DISTRO>` — Specify WSL distribution name
+- `--dry-run` — Print commands without executing
+
+### Typical Workflow
+```bash
+# 1. Check available devices
+scripts/usbipd_attach_serial.sh --list
+
+# 2. Attach all serial devices
+scripts/usbipd_attach_serial.sh --keyword "COM"
+
+# 3. Verify devices in WSL
+ls -la /dev/ttyACM* /dev/ttyUSB*
+
+# 4. Use with idf.py
+idf.py -p /dev/ttyACM0 flash monitor
+```
