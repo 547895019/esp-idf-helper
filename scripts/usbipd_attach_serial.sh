@@ -201,7 +201,7 @@ echo ""
 echo "=== WSL serial nodes ==="
 found=0
 # Check various serial device patterns
-for pat in /dev/ttyACM* /dev/ttyUSB* /dev/ttyS*; do
+for pat in /dev/ttyACM* /dev/ttyUSB*; do
   for dev in $pat; do
     if [[ -e "$dev" ]]; then
       echo "$dev"
