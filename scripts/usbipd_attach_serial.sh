@@ -8,7 +8,7 @@ set -euo pipefail
 BUSID=""
 DISTRO=""
 KEYWORD=""
-DRY_RUN=0
+BIND_ONLY=0
 
 usage() {
   cat <<'EOF'
@@ -33,7 +33,6 @@ Behavior:
 EOF
 }
 
-BIND_ONLY=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --busid) BUSID="${2:-}"; shift 2;;
@@ -97,10 +96,6 @@ fi
 echo "Selected BUSID: $BUSID"
 echo "Attach command: $CMD"
 
-# Bind the device first (admin may be required for first-time bind)
-BIND_CMD="usbipd bind --busid=$BUSID"
-echo "Bind command: $BIND_CMD"
-
 if [[ "$DRY_RUN" == "1" ]]; then
   echo "[dry-run] not executing bind/attach"
   exit 0
@@ -108,6 +103,7 @@ fi
 
 # Execute bind (may fail if already bound, that's ok)
 set +e
+BIND_CMD="usbipd bind --busid=$BUSID"
 BIND_OUT=$(powershell.exe -NoProfile -Command "$BIND_CMD" 2>&1)
 BIND_RC=$?
 set -e

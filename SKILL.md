@@ -1,16 +1,6 @@
 ---
 name: esp-idf-helper
 description: Help develop, build, flash, and debug ESP32/ESP8266 firmware using Espressif ESP-IDF on Linux/WSL. Use when the user asks about ESP-IDF project setup, configuring targets, menuconfig, building, flashing via esptool/idf.py, serial monitor, partition tables, sdkconfig, troubleshooting build/flash/monitor errors, or automating common idf.py workflows from the command line.
-homepage: https://github.com/espressif/esp-idf
-metadata:
-  {
-    "esp-idf":
-      {
-        "emoji": "⌨️",
-        "requires": { "bins": ["idf.py"], "env": ["IDF_PATH"] },
-        "primaryEnv": "IDF_PATH",
-      },
-  }
 ---
 
 # esp-idf-helper
@@ -23,7 +13,8 @@ Provide a repeatable, command-line-first workflow for ESP-IDF development on Lin
 ### Method 1: Activate ESP-IDF first (Recommended)
 ```bash
 # 1) Source the ESP-IDF environment (once per terminal session)
-. $IDF_PATH/export.sh
+cd /path/to/esp-idf
+. ./export.sh
 
 # 1.1) Enable ccache to speed up compilation (recommended)
 export IDF_CCACHE_ENABLE=1
@@ -100,7 +91,6 @@ bash {baseDir}/scripts/flash_with_progress.sh \
   --retries 2
 ```
 - `idf.py fullclean` — Clean build directory
-- `bash {baseDir}/scripts/pack_firmware.sh <BUILD_DIR>` — Generate a production firmware package from an ESP-IDF build directory, including Linux/Mac and Windows flash scripts, multi-port flashing support, retry logic, optional custom baud rate, and bundled `esptool.exe` when available
 
 ### 在新窗口打开 monitor（Windows + WSL2）
 
