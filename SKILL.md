@@ -23,22 +23,51 @@ Provide a repeatable, command-line-first workflow for ESP-IDF development on Lin
 # 1) Source the ESP-IDF environment (once per terminal session)
 . $IDF_PATH/export.sh
 
-# 1.1) Enable ccache to speed up compilation (recommended)
-export IDF_CCACHE_ENABLE=1
+# 2) Enable ccache to speed up compilation (recommended)
+#    Compilation with ccache: ~3-10x faster for incremental builds
+if [ "$IDF_CCACHE_ENABLE" != "1" ]; then
+    echo "⚠️  ccache is disabled. Enable for faster builds:"
+    echo "    export IDF_CCACHE_ENABLE=1"
+    echo ""
+fi
 
-# 2) Go to your project and build
+# 3) Go to your project and build
 cd /path/to/your/project
 idf.py set-target <target>    # Set target chip (once per project)
 idf.py build                 # Compile
 
-# 3) flash
+# 4) flash
 idf.py -p <PORT> -b <BAUD> flash  # Flash to device (optional)
 ```
 
 ### Common commands
 - `idf.py --help` — Help
 - `idf.py set-target <target>` — Set chip target: esp32, esp32s2, esp32s3, esp32c3, esp32p4
-- `idf.py menuconfig` — Configure project settings (**must run in a new terminal window**)
+- `idf.py menuconfig` — Configure project settings via ncurses UI
+
+### Running menuconfig in a Detachable Terminal (tmux)
+
+`idf.py menuconfig` uses ncurses and cannot be directly attached from another terminal session. Use **tmux** to run it in a background session that can be shared:
+
+```bash
+# Kill any existing session first
+tmux kill-session -t menuconfig_esp 2>/dev/null
+
+# Start menuconfig in a named tmux session
+tmux new-session -d -s menuconfig_esp -x 140 -y 45 \
+  "cd /path/to/project && . \$IDF_PATH/export.sh > /dev/null 2>&1 && idf.py menuconfig; echo 'Exited'; read -p 'Press Enter'"
+
+# Attach from any terminal to interact
+tmux attach -t menuconfig_esp
+
+# When done: press Q to save and exit, or Ctrl+B then D to detach
+```
+
+**Alternative — open a new terminal manually:**
+```bash
+# Just open a new terminal window and run:
+cd ~/esp-projects/<project> && . $IDF_PATH/export.sh && idf.py menuconfig
+```
 - `idf.py build` — Build the project
 - `idf.py update-dependencies` — Update project component dependencies
 - `idf.py partition-table` — Build partition table and print partition entries
@@ -73,12 +102,97 @@ idf.py update-dependencies
 
 **Note:** Dependencies are recorded in `idf_component.yml` in your project's main component directory (`main/`).
 
+## ESP Board Manager
+
+**ESP Board Manager** 是 Espressif 提供的板级管理工具，用于管理自定义板级配置、自动生成板级代码和 Kconfig 配置。
+
+### Installation
+
+```bash
+# 确保 ESP-IDF 环境已加载
+. $IDF_PATH/export.sh
+
+# 安装 ESP Board Manager
+pip install esp-bmgr-assist
+```
+
+### Basic Commands
+
+#### 列出可用板子
+```bash
+idf.py bmgr -l
+# 或
+idf.py bmgr --list-boards
+```
+
+#### 指定板子（名称或索引）
+```bash
+# 使用板子名称
+idf.py bmgr -b esp_vocat_board_v1_0
+
+# 使用板子索引
+idf.py bmgr -b 1
+```
+
+#### 使用自定义板子
+```bash
+idf.py bmgr -b my_board -c /path/to/custom/boards
+```
+
+#### 创建新板子
+```bash
+# 在默认 components 目录创建
+idf.py bmgr -n my_new_board
+
+# 在指定路径创建
+idf.py bmgr -n path/to/boards/my_new_board
+```
+
+#### 仅生成 Kconfig 文件
+```bash
+idf.py bmgr -b esp_vocat_board_v1_0 --kconfig-only
+```
+
+#### 清理生成的文件
+```bash
+idf.py bmgr -x
+# 或
+idf.py bmgr --clean
+```
+
+### Command Reference
+
+| 选项 | 说明 |
+|------|------|
+| `-b, --board BOARD` | 板子名称或索引 |
+| `-c, --customer-path PATH` | 自定义板子目录（单个或多个） |
+| `-l, --list-boards` | 列出所有可用板子并退出 |
+| `-n, --new-board ARG` | 创建新板子 |
+| `--peripherals-only` | 仅生成外设相关输出；跳过设备生成 |
+| `--devices-only` | 仅生成设备相关输出；仍会加载外设配置作为设备引用 |
+| `--kconfig-only` | 仅生成 Kconfig 文件；跳过板级代码生成和 sdkconfig 清理 |
+| `--skip-sdkconfig-check` | 跳过 sdkconfig 符号一致性检查 |
+| `-x, --clean` | 删除生成的 .c/.h 文件，重置生成的 CMakeLists.txt / idf_component.yml，并移除 board_manager.defaults |
+| `--log-level LEVEL` | 日志级别：DEBUG, INFO, WARNING, ERROR（默认: INFO） |
+
+### Documentation
+
+- **中文文档:** https://github.com/espressif/esp-gmf/blob/main/packages/esp_board_manager/README_CN.md
+- **GitHub:** https://github.com/espressif/esp-gmf/tree/main/packages/esp_board_manager
+
 ## Bundled resources
 ### references/
 - `references/idf-py-help.txt` — captured `idf.py --help` output for quick lookup/search.
 
 To refresh the help text for your installed ESP-IDF version, run:
 - `scripts/capture_idf_help.sh`
+
+### references/
+- `references/idf-py-help.txt` — captured `idf.py --help` output for quick lookup/search.
+- `references/header-audit-checklist.md` — checklist and known-unguarded files for esp_oneos component header audit (C++ compatibility).
+- `references/extern-c-guard-patch-incident.md` — post-incident analysis: why batch patch corrupted ~50 headers, correct template, verification commands. **Read this before attempting any header guard work on this codebase.**
+
+To refresh the help text for your installed ESP-IDF version, run:
 
 ### assets/
 Not used by default.
