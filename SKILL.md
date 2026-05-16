@@ -104,80 +104,58 @@ idf.py update-dependencies
 
 ## ESP Board Manager
 
-**ESP Board Manager** 是 Espressif 提供的板级管理工具，用于管理自定义板级配置、自动生成板级代码和 Kconfig 配置。
+**ESP Board Manager** is a board-level management tool provided by Espressif. It manages custom board configurations and automatically generates board-level code and Kconfig configuration.
 
 ### Installation
 
 ```bash
-# 确保 ESP-IDF 环境已加载
+# Make sure the ESP-IDF environment is loaded
 . $IDF_PATH/export.sh
 
-# 安装 ESP Board Manager
+# Install ESP Board Manager
 pip install esp-bmgr-assist
 ```
 
 ### Basic Commands
 
-#### 列出可用板子
+#### List available boards
 ```bash
-idf.py bmgr -l
-# 或
-idf.py bmgr --list-boards
+idf.py bmgr -l -c $ESP_BOARD_PATH
 ```
 
-#### 指定板子（名称或索引）
+#### Select a board
 ```bash
-# 使用板子名称
-idf.py bmgr -b esp_vocat_board_v1_0
-
-# 使用板子索引
-idf.py bmgr -b 1
+idf.py bmgr -b my_board -c $ESP_BOARD_PATH
 ```
 
-#### 使用自定义板子
+#### Create a new board
 ```bash
-idf.py bmgr -b my_board -c /path/to/custom/boards
+idf.py bmgr -n $ESP_BOARD_PATH/my_new_board
 ```
 
-#### 创建新板子
-```bash
-# 在默认 components 目录创建
-idf.py bmgr -n my_new_board
-
-# 在指定路径创建
-idf.py bmgr -n path/to/boards/my_new_board
-```
-
-#### 仅生成 Kconfig 文件
-```bash
-idf.py bmgr -b esp_vocat_board_v1_0 --kconfig-only
-```
-
-#### 清理生成的文件
+#### Clean generated files
 ```bash
 idf.py bmgr -x
-# 或
-idf.py bmgr --clean
 ```
 
 ### Command Reference
 
-| 选项 | 说明 |
+| Option | Description |
 |------|------|
-| `-b, --board BOARD` | 板子名称或索引 |
-| `-c, --customer-path PATH` | 自定义板子目录（单个或多个） |
-| `-l, --list-boards` | 列出所有可用板子并退出 |
-| `-n, --new-board ARG` | 创建新板子 |
-| `--peripherals-only` | 仅生成外设相关输出；跳过设备生成 |
-| `--devices-only` | 仅生成设备相关输出；仍会加载外设配置作为设备引用 |
-| `--kconfig-only` | 仅生成 Kconfig 文件；跳过板级代码生成和 sdkconfig 清理 |
-| `--skip-sdkconfig-check` | 跳过 sdkconfig 符号一致性检查 |
-| `-x, --clean` | 删除生成的 .c/.h 文件，重置生成的 CMakeLists.txt / idf_component.yml，并移除 board_manager.defaults |
-| `--log-level LEVEL` | 日志级别：DEBUG, INFO, WARNING, ERROR（默认: INFO） |
+| `-b, --board BOARD` | Board name or index |
+| `-c, --customer-path PATH` | Custom board directory, single or multiple paths |
+| `-l, --list-boards` | List all available boards and exit |
+| `-n, --new-board ARG` | Create a new board |
+| `--peripherals-only` | Generate only peripheral-related output; skip device generation |
+| `--devices-only` | Generate only device-related output; still loads peripheral configuration for device references |
+| `--kconfig-only` | Generate only Kconfig files; skip board-level code generation and sdkconfig cleanup |
+| `--skip-sdkconfig-check` | Skip sdkconfig symbol consistency checks |
+| `-x, --clean` | Delete generated .c/.h files, reset generated CMakeLists.txt / idf_component.yml, and remove board_manager.defaults |
+| `--log-level LEVEL` | Log level: DEBUG, INFO, WARNING, ERROR (default: INFO) |
 
 ### Documentation
 
-- **中文文档:** https://github.com/espressif/esp-gmf/blob/main/packages/esp_board_manager/README_CN.md
+- **Chinese documentation:** https://github.com/espressif/esp-gmf/blob/main/packages/esp_board_manager/README_CN.md
 - **GitHub:** https://github.com/espressif/esp-gmf/tree/main/packages/esp_board_manager
 
 ## Bundled resources
