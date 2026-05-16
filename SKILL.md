@@ -7,7 +7,7 @@ metadata:
     "esp-idf-helper":
       {
         "emoji": "🤖",
-        "requires": { "bins": ["idf.py"], "env": ["IDF_PATH"] },
+        "requires": { "bins": ["idf.py"], "env": ["IDF_PATH","ESP_BOARD_PATH"] },
         "primaryEnv": "IDF_PATH",
       },
   }
